@@ -5,12 +5,25 @@ import json
 with open("config.json", "r") as f:
     config = json.load(f)
 
+data = json.loads(config["cookie"])
+cookie_str = ''
+first_flag = True
+for cookie in data:
+    if not first_flag:
+        cookie_str += '; '
+    cookie_str += '{name}={value}'.format(**cookie)
+    first_flag = False
+
+cookie = cookie_str.strip()
+print(cookie)
+
+'''
 headers = {
     'authority': 'www.chegg.com',
     # 'cache-control': 'max-age=0',
     "Accept-Encoding": "gzip, deflate, br",
     'accept-language': 'en-US,en;q=0.9',
-    'cookie': config["cookie"],
+    'cookie': cookie,
     'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
     'sec-ch-ua-mobile': '?0',
     'upgrade-insecure-requests': '1',
@@ -26,3 +39,4 @@ htmlData = response.text
 soup = bs(htmlData, "html.parser")
 sheesh = soup.find('div', {'class': 'question-body-text'})
 print(sheesh)
+'''
