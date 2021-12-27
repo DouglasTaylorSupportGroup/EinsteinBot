@@ -4,22 +4,14 @@ import json
 
 def parseCookie(fileName):
     with open(fileName, 'r') as f:
-        cookie_text = f.read()
-    data = json.loads(cookie_text)
-    cookie_str = ''
-    first_flag = True
-    for cookie in data:
-        if not first_flag:
-            cookie_str += '; '
-        cookie_str += '{name}={value}'.format(**cookie)
-        first_flag = False
-    cookie = cookie_str.strip()
+        cookieTxt = f.read()
+    cookieRaw = json.loads(cookieTxt)
+    cookieString = ""
+    z = True
+    for cookie in cookieRaw:
+        if not z:
+            cookieString += "; "
+        cookieString += "{name}={value}".format(**cookie)
+        z = False
+    cookie = cookieString.strip()
     return cookie
-
-def cookieToDict(cookie: str):
-    cookieList = {}
-    cookieListRaw = cookie.split(';')
-    for cookie in cookieListRaw:
-        name, value = cookie.split('=', 1)
-        cookieList.update({name.strip(): value.strip()})
-    return cookieList
