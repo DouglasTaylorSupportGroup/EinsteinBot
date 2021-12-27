@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
 import json
 import os
 
@@ -14,14 +13,15 @@ bot = commands.Bot(
     )
 bot.remove_command("help")
 
+for file in os.listdir("./cogs"):
+    if file.endswith(".py"):
+        name = file[:-3]
+        bot.load_extension(f"cogs.{name}")
+
 @bot.event
 async def on_ready():
     print(f"Bot is online")
     await bot.change_presence(activity=discord.Game(name="big brain"))
-    for file in os.listdir("./cogs"):
-        if file.endswith(".py"):
-            name = file[:-3]
-            bot.load_extension(f"cogs.{name}")
 
 try:
     bot.run(config["token"])
