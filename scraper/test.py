@@ -4,10 +4,14 @@ from bs4 import BeautifulSoup as bs
 import json
 
 class Scraper:
+    
+    # Constructor
     def __init__(self, url):
         with open("config.json", "r") as f:
             config = json.load(f)
         self.url = url
+        
+        # Header used for requests
         self.headers = {
             'authority': 'www.chegg.com',
             "Accept-Encoding": "gzip, deflate, br",
@@ -24,10 +28,12 @@ class Scraper:
             'user-agent': config["user_agent"],
         }
 
+    # Parses the html with beautiful soup
     def get_soup(html):
         soup = bs(html, "lxml")
         return soup
 
+    # Checks if the url from a chegg site checks if it is a chapter or a question
     def clean_url(url: str):
         is_chapter = False
         match = re.search(r'chegg\.com/homework-help/questions-and-answers/([^?/]+)', url)
@@ -39,15 +45,14 @@ class Scraper:
                 return
         return is_chapter, 'https://www.' + match.group(0)
 
+    # Gets the html from the url using requests
     def get_html(self, url):
         return requests.get(url, self.headers).text
 
     def replace_links(html):
         return re.sub(r'src=\s*?"//(.*)?"', r'src="https://\1"', html)
 
-    
-
-        
+    # Parses the heading in html on Chegg
     def parse_heading(soup):
         heading = None
         heading_tag = soup.find('span', _class='question-text')
@@ -65,6 +70,7 @@ class Scraper:
             print("no heading")
         return str(heading)
 
+    # Finds the Question that was answered in the Chegg Website
     def parse_question(soup, is_chapter):
         if is_chapter:
             question = "<div></div>"
@@ -72,6 +78,7 @@ class Scraper:
             question = soup.find('div', {'class': 'question-body-text'})
         return question
 
+    # Parses the answer from the Chegg Website
     def parse_answer(soup, qid, html, url, is_chapter):
         token = re.search(r'"token":"(.+?)"', html).group(1)
         if is_chapter:
@@ -97,6 +104,7 @@ class Scraper:
         else:
             print("no qid")
 
+    #
     def parse(self, html, is_chapter, url):
         html = self.replace_links(html)
         soup = bs(html, 'lxml')
