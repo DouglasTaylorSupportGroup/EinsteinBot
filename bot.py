@@ -12,7 +12,7 @@ with open("config.json", "r") as f:
 # Initialize
 bot = commands.Bot(
     command_prefix = config["prefix"]
-    )
+)
 bot.remove_command("help")
 
 for file in os.listdir("./cogs"):
