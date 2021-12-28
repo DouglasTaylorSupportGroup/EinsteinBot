@@ -1,5 +1,4 @@
 import discord
-from discord.commands import slash_command
 from discord.ext import commands
 
 class Information(commands.Cog):
@@ -9,9 +8,13 @@ class Information(commands.Cog):
         self.bot = bot
     
     # Checks the ping of the bot
-    @slash_command(name="ping", guild_ids=[642556556680101903])
+    @commands.command(name="ping")
     async def ping(self, ctx):
-        await ctx.respond(f"🏓 Pong! My ping is {round(self.bot.latency * 1000)}ms")
+        ping = f"🏓 Pong! My ping is {round(self.bot.latency * 1000)}ms"
+        if isinstance(ctx, discord.ApplicationContext):
+            await ctx.respond(ping)
+        else:
+            await ctx.send(ping)
 
     @commands.command(name="help")
     async def help(self, ctx):
@@ -20,7 +23,10 @@ class Information(commands.Cog):
         embed.add_field(name="help", value="Display this message.", inline=False)
         embed.add_field(name="ping", value="Displays the ping.", inline=False)
         embed.add_field(name="search `url`", value="Searches for the answer within a Chegg link.", inline=False)
-        await ctx.respond(embed=embed)
+        if isinstance(ctx, discord.ApplicationContext):
+            await ctx.respond(embed=embed)
+        else:
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Information(bot))
