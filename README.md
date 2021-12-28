@@ -1,4 +1,3 @@
-# Einstein Bot
 <br>
 <p align="center">
   <h3 align="center">EinsteinBot</h3>
