@@ -80,9 +80,10 @@ class Scraper:
 
     # Parses the answer from the Chegg Website
     def parse_answer(soup, qid, html, url, is_chapter):
-        token = re.search(r'"token":"(.+?)"', html).group(1)
         if is_chapter:
             return "fuck"
+        token = re.search(r'"token":"(.+?)"', html).group(1)
+        return token
 
     def get_qid(html, is_chapter):
         is_qid = None
