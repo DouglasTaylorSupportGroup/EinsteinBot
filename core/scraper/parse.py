@@ -45,9 +45,29 @@ def parsePage(html, isChapter):
 def getAnswer(dataRaw, isChapter):
     if isChapter:
         chapter = dataRaw["data"]["textbook_solution"]["chapter"][0]
-        question = chapter['problems'][0]
-        solution = question['solutionV2'][0]
-        return question, solution
+        json = chapter["problems"][0]
+        solutionjson = json["solutionV2"][0]
+        totalSteps = solutionjson["totalSteps"]
+        stepList = []
+        for i in solutionjson["steps"]:
+            html = bs(str(i["html"]), "html.parser")
+            if "<b>" or "</b>" in i:
+                strong = html.find_all("b")
+                for i in strong:
+                    i.replace_with("**" + i.text + "**")
+            hasimg = False
+            if "<img>" or "</img>" in i:
+                hasimg = True
+                img = html.find_all("img")
+                for i in img:
+                    url = i["src"]
+                    i.replace_with(" " + url + " ")
+            text = html.get_text()
+            text = text.strip()
+            if hasimg:
+                text = " ".join(text.split())
+            stepList.append(text)
+        return stepList, totalSteps
     else:
         if 'class="hidden"' in str(dataRaw):
             hidden = dataRaw.find_all("div", {"class": "hidden"})
@@ -74,5 +94,6 @@ def getAnswer(dataRaw, isChapter):
         if answerList[0] == "\n":
             answerList = answerList[1:]
         if answerList[-1] == "\n":
-            answerList = answerList[:-1]
+            answerList = answerList[:-1]      
+        answerList = " ".join(answerList)
         return answerList

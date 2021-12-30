@@ -1,5 +1,4 @@
 import requests
-from requests_html import HTMLSession
     
 def requestWebsite(url, cookie, userAgent):
     headers = {
