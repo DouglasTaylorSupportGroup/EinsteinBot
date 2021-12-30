@@ -9,11 +9,10 @@ with open("config.json", "r") as f:
 cookieStr = cookie.parseCookie("cookie.txt")
 
 def checkLink(link):
-    item = re.search('https://www.chegg.com/homework-help/(.*?)/', link)
-    if "questions-and-answers" not in item:
+    isChapter = False
+    item = re.search(r'chegg.com/homework-help/questions-and-answers/(.*?)', link)
+    if not item:
         isChapter = True
-    else:
-        isChapter = False
     return isChapter
 
 def parsePage(html, isChapter):
