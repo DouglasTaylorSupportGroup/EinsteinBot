@@ -35,6 +35,12 @@ class Commands(commands.Cog):
                     else:
                         data = dataRaw[1]
                     answerRaw = parse.getAnswer(data, isChapter)
+                    for word in answerRaw.split():
+                        if validators.url(word):
+                            ctx.send(word)
+                        else:
+                            description = description + word
+                            ctx.send(description)
                     
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
