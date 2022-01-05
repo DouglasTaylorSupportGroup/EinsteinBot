@@ -2,17 +2,19 @@ import discord
 from discord.ext import commands
 import validators
 import json
-from core import cookie
-from core.scraper import request, parse
+import cheinsteinpy 
 
 with open("config.json", "r") as f:
     config = json.load(f)
+
+with open("cookie.txt", 'r') as f:
+    cookieTxt = f.read()
 
 class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.limit = False
-        self.cookieStr = cookie.parseCookie("cookie.txt")
+        self.cookie = cookieTxt
         self.userAgent = config["userAgent"]
 
     # need global ratelimit maybe 2 mins between each
@@ -27,32 +29,25 @@ class Commands(commands.Cog):
                     searchingEmbed.set_footer(text="This may take a while.")
                     searchingMessage = await ctx.send(embed=searchingEmbed)
 
-                    htmlData = request.requestWebsite(url, self.cookieStr, self.userAgent)
-                    isChapter = parse.checkLink(url)
-                    dataRaw = parse.parsePage(htmlData, isChapter)
-                    if isChapter:
-                        data = dataRaw
-                    else:
-                        data = dataRaw[1]
-                    answerRaw = parse.getAnswer(data, isChapter)
+                    answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
                     for word in answerRaw.split():
                         if validators.url(word):
                             ctx.send(word)
                         else:
                             description = description + word
-                            ctx.send(description)
+                            await ctx.send(description)
                     
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
-                await ctx.respond(embed=urlError)
+                await ctx.send(embed=urlError)
                 return
             else:
-                completeError = discord.Embed(title="Error", color=0xff4f4f, description="Something went wrong. Create an issue here for support: https://github.com/The-Brandon-Tran/EinsteinBot")
+                completeError = discord.Embed(title="Error", color=0xff4f4f, description="Something went wrong. Create an issue here for support: https://github.com/DouglasTaylorSupportGroup/EinsteinBot")
                 await ctx.send(embed=completeError, delete_after=5.0)
                 return
         else:
             argError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
-            await ctx.respond(embed=argError)
+            await ctx.send(embed=argError)
             return
         
 def setup(bot):
