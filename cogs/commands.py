@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import validators
 import json
-import cheinsteinpy 
+import cheinsteinpy
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -25,16 +25,33 @@ class Commands(commands.Cog):
                 if self.limit is False:
                     url = arg
                     self.limit = True
+                    
+                    # Display messages to user about bot
                     searchingEmbed = discord.Embed(title="Searching...", color=0xeb7100)
                     searchingEmbed.set_footer(text="This may take a while.")
                     searchingMessage = await ctx.send(embed=searchingEmbed)
 
+                    # Displays the answer for Chapter Questions
                     answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
-                    for count, step in enumerate(answerRaw):
-                        count = count + 1
-                        await ctx.send(f"**Step: {str(count)}**")
-                        description = ""
-                        for word in step.split():
+                    if cheinsteinpy.parsers.checkLink(url) is True:
+                        for count, step in enumerate(answerRaw):
+                            count = count + 1
+                            await ctx.send(f"**Step: {str(count)}**")
+                            description = ""
+                            for word in step.split():
+                                if validators.url(word):
+                                    if(len(description) > 0):
+                                        await ctx.send(description)
+                                    await ctx.send(word)
+                                    description = ""
+                                else:
+                                    description = description + word + " "
+                            if(len(description) > 0):
+                                await ctx.send(description)
+                    
+                    # Displays the answer for Normal Questions
+                    else:
+                        for word in answerRaw:
                             if validators.url(word):
                                 if(len(description) > 0):
                                     await ctx.send(description)
@@ -44,6 +61,7 @@ class Commands(commands.Cog):
                                 description = description + word + " "
                         if(len(description) > 0):
                             await ctx.send(description)
+
                     
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
