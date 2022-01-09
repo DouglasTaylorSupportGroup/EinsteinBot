@@ -17,7 +17,7 @@ class Commands(commands.Cog):
         self.cookie = cookieTxt
         self.userAgent = config["userAgent"]
 
-    # need global ratelimit maybe 2 mins between each
+    # Need global Ratelimit maybe 2 mins between each
     @commands.command(name="search", guild_ids=[642556556680101903])
     async def search(self, ctx, arg=None):
         if arg is not None:
@@ -30,11 +30,19 @@ class Commands(commands.Cog):
                     searchingMessage = await ctx.send(embed=searchingEmbed)
 
                     answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
-                    for word in answerRaw.split():
-                        if validators.url(word):
-                            ctx.send(word)
-                        else:
-                            description = description + word
+                    for count, step in enumerate(answerRaw):
+                        count = count + 1
+                        await ctx.send(f"**Step: {str(count)}**")
+                        description = ""
+                        for word in step.split():
+                            if validators.url(word):
+                                if(len(description) > 0):
+                                    await ctx.send(description)
+                                await ctx.send(word)
+                                description = ""
+                            else:
+                                description = description + word + " "
+                        if(len(description) > 0):
                             await ctx.send(description)
                     
             elif validators.url(arg) != True:
