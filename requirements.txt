@@ -2,4 +2,4 @@ git+https://github.com/Pycord-Development/pycord@51dd856e9e07b16440790812a64eac0
 validators
 requests
 beautifulsoup4
-cheinsteinpy
+git+https://github.com/DouglasTaylorSupportGroup/cheinstein.py
