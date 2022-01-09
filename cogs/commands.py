@@ -1,3 +1,4 @@
+import re
 import discord
 from discord.ext import commands
 import validators
@@ -34,9 +35,11 @@ class Commands(commands.Cog):
                     # Displays the answer for Chapter Questions
                     answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
                     if cheinsteinpy.checkLink(url) is True:
+                        await searchingMessage.delete()
                         for count, step in enumerate(answerRaw):
                             count = count + 1
-                            await ctx.send(f"**Step: {str(count)}**")
+                            stepEmbed = discord.Embed(title=f"Step {str(count)}", color=0xeb7100)
+                            await ctx.send(embed=stepEmbed)
                             description = ""
                             for word in step.split():
                                 if validators.url(word):
@@ -51,17 +54,23 @@ class Commands(commands.Cog):
                     
                     # Displays the answer for Normal Questions
                     else:
+                        await searchingMessage.delete()
                         description = ""
-                        for word in answerRaw.split():
-                            if validators.url(word):
-                                if(len(description) > 0):
-                                    await ctx.send(description)
-                                await ctx.send(word)
-                                description = ""
-                            else:
-                                description = description + word + " "
-                        if(len(description) > 0):
-                            await ctx.send(description)                     
+                        regex = re.search("(?P<url>https?://[^\s]+)", answerRaw)
+                        if regex is not None:
+                            for word in answerRaw.split():
+                                if validators.url(word):
+                                    if(len(description) > 0):
+                                        await ctx.send(description)
+                                    await ctx.send(word)
+                                    description = ""
+                                else:
+                                    description = description + word + " "
+                            if(len(description) > 0):
+                                await ctx.send(description)
+                        else:
+                            embed = discord.Embed(title="Answer", description=answerRaw, color=0xeb7100)
+                            await ctx.send(embed=embed)
 
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
