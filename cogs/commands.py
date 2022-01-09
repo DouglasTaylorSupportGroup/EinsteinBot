@@ -33,7 +33,7 @@ class Commands(commands.Cog):
 
                     # Displays the answer for Chapter Questions
                     answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
-                    if cheinsteinpy.parsers.checkLink(url) is True:
+                    if cheinsteinpy.checkLink(url) is True:
                         for count, step in enumerate(answerRaw):
                             count = count + 1
                             await ctx.send(f"**Step: {str(count)}**")
@@ -51,7 +51,8 @@ class Commands(commands.Cog):
                     
                     # Displays the answer for Normal Questions
                     else:
-                        for word in answerRaw:
+                        description = ""
+                        for word in answerRaw.split():
                             if validators.url(word):
                                 if(len(description) > 0):
                                     await ctx.send(description)
@@ -60,9 +61,8 @@ class Commands(commands.Cog):
                             else:
                                 description = description + word + " "
                         if(len(description) > 0):
-                            await ctx.send(description)
+                            await ctx.send(description)                     
 
-                    
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
                 await ctx.send(embed=urlError)
