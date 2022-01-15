@@ -22,13 +22,13 @@ class Commands(commands.Cog):
 
     # Need global Ratelimit maybe 2 mins between each
     @commands.command(name="search")
+    @commands.cooldown(1, 20)
     async def search(self, ctx, arg=None):
         if arg is not None:
             if validators.url(arg) == True:
-                if (self.limit and self.commandRunning) is False:
-                    url = arg
-                    self.limit = True
+                if self.commandRunning is False:
                     self.commandRunning = True
+                    url = arg
 
                     # Display messages to user about bot
                     searchingEmbed = discord.Embed(title="Searching...", color=0xeb7100)
@@ -93,12 +93,6 @@ class Commands(commands.Cog):
                                     await ctx.send(embed=embed)
                             
                         self.commandRunning = False
-                        await asyncio.sleep(15)
-                        self.limit = False
-                else:
-                    embed = discord.Embed(title="Global Rate-Limit", description="Please wait 15 seconds and try again.", color=0xeb7100)
-                    embed.set_footer(text="Avoids bot detection on the account.")
-                    await ctx.send(embed=embed)
 
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
@@ -112,6 +106,15 @@ class Commands(commands.Cog):
             argError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
             await ctx.send(embed=argError)
             return
+    
+    @search.error
+    async def searchError(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title="Global Rate-Limit", description=f"Please wait {round(error.retry_after)} seconds and try again.", color=0xeb7100)
+            embed.set_footer(text="Avoids bot detection on Chegg.")
+            await ctx.send(embed=embed)
+        else:
+            print(error)
         
 def setup(bot):
     bot.add_cog(Commands(bot))
