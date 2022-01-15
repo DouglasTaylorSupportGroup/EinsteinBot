@@ -4,7 +4,8 @@ from discord.ext import commands
 import validators
 import json
 import cheinsteinpy
-import asyncio
+import traceback
+import sys
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -15,8 +16,6 @@ with open("cookie.txt", 'r') as f:
 class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.limit = False
-        self.commandRunning = False
         self.cookie = cookieTxt
         self.userAgent = config["userAgent"]
 
@@ -26,7 +25,7 @@ class Commands(commands.Cog):
     async def search(self, ctx, arg=None):
         if arg is not None:
             if validators.url(arg) == True:
-                if self.commandRunning is False:
+                if "chegg.com/homework-help" in arg:
                     self.commandRunning = True
                     url = arg
 
@@ -91,15 +90,17 @@ class Commands(commands.Cog):
                                 else:
                                     embed = discord.Embed(title="Answer", description=answerRaw, color=0xeb7100)
                                     await ctx.send(embed=embed)
-                            
-                        self.commandRunning = False
-
+                else:
+                    urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
+                    await ctx.send(embed=urlError)
+                    return
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
                 await ctx.send(embed=urlError)
                 return
             else:
                 completeError = discord.Embed(title="Error", color=0xff4f4f, description="Something went wrong. Create an issue here for support: https://github.com/DouglasTaylorSupportGroup/EinsteinBot")
+                completeError.set_footer(text="ERROR_001")
                 await ctx.send(embed=completeError, delete_after=5.0)
                 return
         else:
@@ -114,7 +115,8 @@ class Commands(commands.Cog):
             embed.set_footer(text="Avoids bot detection on Chegg.")
             await ctx.send(embed=embed)
         else:
-            print(error)
+            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
         
 def setup(bot):
     bot.add_cog(Commands(bot))
