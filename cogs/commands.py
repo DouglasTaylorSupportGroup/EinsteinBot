@@ -4,6 +4,7 @@ from discord.ext import commands
 import validators
 import json
 import cheinsteinpy
+import asyncio
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -15,62 +16,89 @@ class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.limit = False
+        self.commandRunning = False
         self.cookie = cookieTxt
         self.userAgent = config["userAgent"]
 
     # Need global Ratelimit maybe 2 mins between each
-    @commands.command(name="search", guild_ids=[642556556680101903])
+    @commands.command(name="search")
     async def search(self, ctx, arg=None):
         if arg is not None:
             if validators.url(arg) == True:
-                if self.limit is False:
+                if (self.limit and self.commandRunning) is False:
                     url = arg
                     self.limit = True
-                    
+                    self.commandRunning = True
+
                     # Display messages to user about bot
                     searchingEmbed = discord.Embed(title="Searching...", color=0xeb7100)
-                    searchingEmbed.set_footer(text="This may take a while.")
+                    searchingEmbed.set_footer(text="This may take up to 10 seconds.")
                     searchingMessage = await ctx.send(embed=searchingEmbed)
 
                     # Displays the answer for Chapter Questions
                     answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
-                    if cheinsteinpy.checkLink(url) is True:
+                    if answerRaw is None:
                         await searchingMessage.delete()
-                        for count, step in enumerate(answerRaw):
-                            count = count + 1
-                            stepEmbed = discord.Embed(title=f"Step {str(count)}", color=0xeb7100)
-                            await ctx.send(embed=stepEmbed)
-                            description = ""
-                            for word in step.split():
-                                if validators.url(word):
-                                    if(len(description) > 0):
-                                        await ctx.send(description)
-                                    await ctx.send(word)
-                                    description = ""
-                                else:
-                                    description = description + word + " "
-                            if(len(description) > 0):
-                                await ctx.send(description)
-                    
-                    # Displays the answer for Normal Questions
+                        errorEmbed = discord.Embed(title="Error", description="Something went wrong or there was no solution.", color=0xff4f4f)
+                        await ctx.send(embed=errorEmbed)
                     else:
-                        await searchingMessage.delete()
-                        description = ""
-                        regex = re.search("(?P<url>https?://[^\s]+)", answerRaw)
-                        if regex is not None:
-                            for word in answerRaw.split():
-                                if validators.url(word):
-                                    if(len(description) > 0):
-                                        await ctx.send(description)
-                                    await ctx.send(word)
-                                    description = ""
-                                else:
-                                    description = description + word + " "
-                            if(len(description) > 0):
-                                await ctx.send(description)
+                        if cheinsteinpy.checkLink(url) is True:
+                            await searchingMessage.delete()
+                            for count, step in enumerate(answerRaw):
+                                count = count + 1
+                                stepEmbed = discord.Embed(title=f"Step {str(count)}", color=0xeb7100)
+                                await ctx.send(embed=stepEmbed)
+                                description = ""
+                                for word in step.split():
+                                    if validators.url(word):
+                                        if(len(description) > 0):
+                                            await ctx.send(description)
+                                        await ctx.send(word)
+                                        description = ""
+                                    else:
+                                        description = description + word + " "
+                                if(len(description) > 0):
+                                    await ctx.send(description)
+                        
+                        # Displays the answer for Normal Questions
                         else:
-                            embed = discord.Embed(title="Answer", description=answerRaw, color=0xeb7100)
-                            await ctx.send(embed=embed)
+                            await searchingMessage.delete()
+                            description = ""
+                            regex = re.search("(?P<url>https?://[^\s]+)", answerRaw)
+                            if regex is not None:
+                                for word in answerRaw.split():
+                                    if validators.url(word):
+                                        if(len(description) > 0):
+                                            await ctx.send(description)
+                                        await ctx.send(word)
+                                        description = ""
+                                    else:
+                                        description = description + word + " "
+                                if(len(description) > 0):
+                                    await ctx.send(description)
+                            else:
+                                if len(answerRaw) >= 6000:
+                                    charCount = 0
+                                    description = ""
+                                    for word in answerRaw.split():
+                                        charCount += len(word)
+                                        if charCount >= 3000:
+                                            embed = discord.Embed(title="Answer", description=description, color=0xeb7100)
+                                            await ctx.send(embed=embed)
+                                            description = ""
+                                            charCount = 0
+                                        description = description + word + " "
+                                else:
+                                    embed = discord.Embed(title="Answer", description=answerRaw, color=0xeb7100)
+                                    await ctx.send(embed=embed)
+                            
+                        self.commandRunning = False
+                        await asyncio.sleep(15)
+                        self.limit = False
+                else:
+                    embed = discord.Embed(title="Global Rate-Limit", description="Please wait 15 seconds and try again.", color=0xeb7100)
+                    embed.set_footer(text="Avoids bot detection on the account.")
+                    await ctx.send(embed=embed)
 
             elif validators.url(arg) != True:
                 urlError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
