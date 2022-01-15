@@ -100,8 +100,8 @@ class Commands(commands.Cog):
                 return
             else:
                 completeError = discord.Embed(title="Error", color=0xff4f4f, description="Something went wrong. Create an issue here for support: https://github.com/DouglasTaylorSupportGroup/EinsteinBot")
-                completeError.set_footer(text="ERROR_001")
-                await ctx.send(embed=completeError, delete_after=5.0)
+                completeError.set_footer(text="ERROR001")
+                await ctx.send(embed=completeError)
                 return
         else:
             argError = discord.Embed(title="Error", color=0xff4f4f, description="You need to provide a vaild URL.")
@@ -115,6 +115,9 @@ class Commands(commands.Cog):
             embed.set_footer(text="Avoids bot detection on Chegg.")
             await ctx.send(embed=embed)
         else:
+            completeError = discord.Embed(title="Error", color=0xff4f4f, description="Something went wrong. Create an issue here for support: https://github.com/DouglasTaylorSupportGroup/EinsteinBot")
+            completeError.set_footer(text="ERROR002")
+            await ctx.send(embed=completeError)
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
         
