@@ -14,7 +14,6 @@ bot = commands.Bot(
     command_prefix = config["prefix"]
 )
 bot.remove_command("help")
-bot.register_commands()
 
 for file in os.listdir("./cogs"):
     if file.endswith(".py"):
