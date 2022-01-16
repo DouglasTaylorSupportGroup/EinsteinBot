@@ -23,7 +23,7 @@ for file in os.listdir("./cogs"):
 @bot.event
 async def on_ready():
     print(f"Bot is online")
-    await bot.change_presence(activity=discord.Game(name="big brain"))
+    await bot.change_presence(activity=discord.Game(name="big brain | =help"))
 
 try:
     bot.run(config["token"])
