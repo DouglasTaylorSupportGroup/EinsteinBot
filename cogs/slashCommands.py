@@ -10,18 +10,18 @@ class SlashCommands(commands.Cog):
 
     @commands.slash_command(name="ping", guild_ids=[642556556680101903])
     async def ping_slash(self, ctx):
-        await info.Information.ping(ctx)
+        await info.Information.ping(self, ctx)
 
     @commands.slash_command(name="help", guild_ids=[642556556680101903])
     async def help_slash(self, ctx):
-        await info.Information.help(ctx)
+        await info.Information.help(self, ctx)
 
     @commands.slash_command(name="search", guild_ids=[642556556680101903])
     @ratelimit.searchCooldown
     async def search_slash(self, ctx, **url):
         await ctx.defer()
         url = url["url"]
-        await main.Commands.search(ctx, url)
+        await main.Commands.search(self, ctx, url)
 
     @search_slash.error
     async def search_slash_error(self, ctx, error):
