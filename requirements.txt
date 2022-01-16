@@ -1,4 +1,4 @@
-git+https://github.com/Pycord-Development/pycord@51dd856e9e07b16440790812a64eac0bf451633f
+git+https://github.com/Pycord-Development/pycord@71c0711e299a1d061c6edb5994777ff19644873c
 validators
 requests
 beautifulsoup4
