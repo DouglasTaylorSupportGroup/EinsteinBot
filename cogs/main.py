@@ -28,13 +28,21 @@ class Commands(commands.Cog):
         if url is not None:
             if validators.url(url) == True:
                 if "chegg.com/homework-help" in url:
-                    answerRaw = cheinsteinpy.answer(url, self.cookie, self.userAgent)
+                    if isinstance(ctx, discord.ApplicationContext) is False:
+                        searchingEmbed = discord.Embed(title="Searching...", color=0xeb7100)
+                        searchingEmbed.set_footer(text="This may take up to 10 seconds.")
+                        searchingMessage = await ctx.send(embed=searchingEmbed)
+                    answerRaw = await cheinsteinpy.answer(url, self.cookie, self.userAgent)
                     # Displays the answer for Chapter Questions
                     if answerRaw is None:
+                        if isinstance(ctx, discord.ApplicationContext) is False:
+                            await searchingMessage.delete()
                         errorEmbed = discord.Embed(title="Error", description="Something went wrong or there was no solution.", color=0xff4f4f)
                         await sendDefer(ctx, errorEmbed, True)
                     else:
                         if cheinsteinpy.checkLink(url) is True:
+                            if isinstance(ctx, discord.ApplicationContext) is False:
+                                await searchingMessage.delete()
                             for count, step in enumerate(answerRaw):
                                 count = count + 1
                                 stepEmbed = discord.Embed(title=f"Step {str(count)}", color=0xeb7100)
@@ -53,6 +61,8 @@ class Commands(commands.Cog):
                         
                         # Displays the answer for Normal Questions
                         else:
+                            if isinstance(ctx, discord.ApplicationContext) is False:
+                                await searchingMessage.delete()
                             description = ""
                             regex = re.search("(?P<url>https?://[^\s]+)", answerRaw)
                             if regex is not None:
