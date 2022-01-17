@@ -1,16 +1,28 @@
 import discord
 
-async def send(ctx, message, isEmbed):
+async def send(ctx, message, isEmbed, view=None):
     if isEmbed:
         if isinstance(ctx, discord.ApplicationContext):
-            await ctx.respond(embed=message)
+            if view is not None:
+                await ctx.respond(embed=message, view=view)
+            else:
+                await ctx.respond(embed=message)
         else:
-            await ctx.send(embed=message)
+            if view is not None:
+                await ctx.send(embed=message, view=view)
+            else:
+                await ctx.send(embed=message)
     else:
         if isinstance(ctx, discord.ApplicationContext):
-            await ctx.respond(message)
+            if view is not None:
+                await ctx.respond(message, view=view)
+            else:
+                await ctx.respond(message)
         else:
-            await ctx.send(message)
+            if view is not None:
+                await ctx.send(message, view=view)
+            else:
+                await ctx.send(message)
 
 async def sendDefer(ctx, message, isEmbed):
     if isEmbed:
