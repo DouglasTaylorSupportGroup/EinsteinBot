@@ -8,20 +8,24 @@ class SlashCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command(name="ping", guild_ids=[642556556680101903])
+    @commands.slash_command(name="ping")
     async def ping_slash(self, ctx):
         await info.Information.ping(self, ctx)
 
-    @commands.slash_command(name="help", guild_ids=[642556556680101903])
+    @commands.slash_command(name="help")
     async def help_slash(self, ctx):
         await info.Information.help(self, ctx)
 
-    @commands.slash_command(name="search", guild_ids=[642556556680101903])
+    @commands.slash_command(name="source")
+    async def source_slash(self, ctx):
+        await info.Information.source(self, ctx)
+
+    @commands.slash_command(name="search")
     @ratelimit.searchCooldown
     async def search_slash(self, ctx, **url):
         await ctx.defer()
-        url = url["url"]
-        await main.Commands.search(self, ctx, url)
+        urlReal = url["url"]
+        await main.Commands.search(ctx, urlReal)
 
     @search_slash.error
     async def search_slash_error(self, ctx, error):
