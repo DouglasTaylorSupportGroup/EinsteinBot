@@ -6,7 +6,14 @@ EinsteinBot is a service that creates a super easy way to share Chegg answers wi
 
 EinsteinBot is pretty easy to deploy. Everything is open-source and free to use (except for the Chegg service itself, you will need your own account).
 
-## Setup
+## 📝 Commands
+
+- `help`: Displays all commands of the bot.
+- `ping`: Pong! Displays the ping of the bot.
+- `source`: Displays the bot's GitHub repository.
+- `search <url>` : Searches for the solution of a problem from Chegg.
+
+## 🔨 Setup
 
 ### Requirements
 
