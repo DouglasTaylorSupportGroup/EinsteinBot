@@ -20,6 +20,10 @@ class SlashCommands(commands.Cog):
     async def source_slash(self, ctx):
         await info.Information.source(self, ctx)
 
+    @commands.slash_command(name="botinfo")
+    async def botinfo_slash(self, ctx):
+        await info.Information.botinfo(self, ctx)
+
     @commands.slash_command(name="search")
     @ratelimit.searchCooldown
     async def search_slash(self, ctx, **url):

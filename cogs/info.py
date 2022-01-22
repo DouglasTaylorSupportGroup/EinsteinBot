@@ -1,7 +1,14 @@
 import discord
 from discord.ext import commands
 
+import time
+import datetime
+from datetime import datetime
+from datetime import timedelta
+
 from core.utils import send
+
+startTime = time.time()
 
 class Link(discord.ui.View):
     def __init__(self, link, label):
@@ -38,6 +45,27 @@ class Information(commands.Cog):
         embed.set_author(name="EinsteinBot", icon_url=self.bot.user.avatar.url)
         embed.set_footer(text="If you like the bot, consider leaving a star ⭐ on the repository, it helps a ton :D.")
         await send(ctx, embed, True, Link(link, label))
+
+    @commands.command(name="botinfo")
+    async def botinfo(self, ctx):
+        # Get all users in all servers the bot is in.
+        activeServers = self.bot.guilds
+        botUsers = 0
+        for i in activeServers:
+            botUsers += i.member_count
+        # Get the current uptime.
+        currentTime = time.time()
+        differenceUptime = int(round(currentTime - startTime))
+        uptime = str(timedelta(seconds = differenceUptime))
+        # Make the embed for the message.
+        botinfo = discord.Embed(
+            title="Bot info",
+            color=0x3083e3,
+            timestamp=datetime.now(),
+            description=f"**Server Count:** {len(self.bot.guilds)}\n**Bot Users:** {botUsers}\n**Bot Uptime:** {uptime}"
+        )
+        botinfo.set_author(name="MangaUpdates", icon_url=self.bot.user.avatar.url)
+        await send(ctx, botinfo, True)
 
 def setup(bot):
     bot.add_cog(Information(bot))
