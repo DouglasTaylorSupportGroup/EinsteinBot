@@ -34,6 +34,7 @@ class Information(commands.Cog):
         embed.add_field(name="=help", value="Display this message.", inline=False)
         embed.add_field(name="=ping", value="Displays the ping.", inline=False)
         embed.add_field(name="=source", value="Displays the bot's GitHub repository.", inline=False)
+        embed.add_field(name="=botinfo", value="Displays the bot's information.", inline=False)
         embed.add_field(name="=search `url`", value="Searches for the answer within a Chegg link.", inline=False)
         await send(ctx, embed, True)
 
