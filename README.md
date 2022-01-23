@@ -51,7 +51,7 @@ EinsteinBot is pretty easy to deploy. Everything is open-source and free to use 
 {
     "prefix": "THE BOTS PREFIX GOES HERE (ANYTHING YOU WANT)",
     "token": "THE BOTS TOKEN GOES HERE (NOT THE CLIENT ID)",
-    "userAgent": "YOUR USER AGENT GOES HERE (REFER TO STEP 4 FROM CHEGG SETUP)",
+    "userAgent": "YOUR USER AGENT GOES HERE (REFER TO STEP 4 FROM CHEGG SETUP)"
 }
 ```
 4. Copy the `cookie.txt` file from step 3 of Chegg Setup into the folder that you cloned.
