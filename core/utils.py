@@ -1,4 +1,5 @@
 import discord
+from sys import platform
 
 async def send(ctx, message, isEmbed, view=None):
     if isEmbed:
@@ -35,3 +36,15 @@ async def sendDefer(ctx, message, isEmbed):
             await ctx.send_followup(message)
         else:
             await ctx.send(message)
+
+async def callCommand(command, self, ctx, parameter=None):
+    if platform.startswith("linux"):
+        if parameter is None:
+            await command(self, ctx)
+        else:
+            await command(ctx, parameter)
+    else:
+        if parameter is None:
+            await command(ctx)
+        else:
+            await command(ctx, parameter)
