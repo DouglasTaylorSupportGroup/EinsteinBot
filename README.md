@@ -62,3 +62,9 @@ EinsteinBot is pretty easy to deploy. Everything is open-source and free to use 
 python -u bot.py
 ```
 6. You can invite the bot by putting your client id/application id in this link where it says `YOURAPPIDHERE` (this link already has all the permissions needed for the bot): https://discord.com/oauth2/authorize?client_id=YOURAPPIDHERE&scope=applications.commands%20bot&permissions=139586751552
+
+# Author
+
+**EinsteinBot** © [DTSG](https://github.com/DouglasTaylorSupportGroup), Released under the [GPL License](https://github.com/DouglasTaylorSupportGroup/EinsteinBot/blob/main/LICENSE).
+
+Authored and maintained by [DouglasTaylorSupportGroup](https://github.com/DouglasTaylorSupportGroup).
