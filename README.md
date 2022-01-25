@@ -97,6 +97,6 @@ python -u bot.py
 
 # Author
 
-**EinsteinBot** © [DTSG](https://github.com/DouglasTaylorSupportGroup), Released under the [GPL License](https://github.com/DouglasTaylorSupportGroup/EinsteinBot/blob/main/LICENSE).
+**EinsteinBot** © [DTSG](https://github.com/DouglasTaylorSupportGroup), Released under the [Apache License 2.0](https://github.com/DouglasTaylorSupportGroup/EinsteinBot/blob/main/LICENSE).
 
 Authored and maintained by [DouglasTaylorSupportGroup](https://github.com/DouglasTaylorSupportGroup).
