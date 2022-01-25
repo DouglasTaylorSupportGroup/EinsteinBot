@@ -16,7 +16,7 @@ EinsteinBot is pretty easy to deploy. Everything is open-source and free to use 
     <summary>Normal Answers</summary>
     <ul>
         <li><b>Discord shows:</b></li>
-        <img src="https://cdn.hayasaka.moe/v0bcenx392pm.jpg" />
+        <img src="https://cdn.hayasaka.moe/r7w3se5dfby3.jpg" />
         <li><b>Chegg Website shows:</b></li>
         <img src="https://cdn.hayasaka.moe/myg98bxpoj2f.jpg" />
     </ul>
