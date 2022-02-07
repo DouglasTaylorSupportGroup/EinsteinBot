@@ -2,7 +2,7 @@
 
 # 🤖 A Discord bot that displays homework solutions from Chegg.com in a text channel.
 
-> **Disclamer**:  We are not responsible for any problems that may occur with this bot. This includes but is not limited to: support for building/making the bot or banned accounts. We will however respond to any **bugs/problems with the bot itself sending solutions**. This bot was developed for educational purposes only.
+> **Disclamer:**  We are not responsible for any problems that may occur with this bot. This includes but is not limited to: support for building/making the bot or banned accounts. We will however respond to any **bugs/problems with the bot itself sending solutions**. This bot was developed for private and educational purposes only. Please make sure you are not violating the EULA/TOS of Chegg before you start using this bot. We are not affiliated with Chegg and DTSG does not condone the illegal use of EinsteinBot.
 
 EinsteinBot is a service that creates a super easy way to share Chegg answers with others using a Discord Bot. It only requires one Chegg account and everyone can use Chegg's service using the account. You only need the Chegg link, and EinsteinBot will send the solution provided by Chegg in the text channel.
 
